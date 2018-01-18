@@ -25,7 +25,9 @@ class JSONSplitter extends Duplex {
 
     this.expectedTerminatorStack = [''];
     this.buffer = '';
+    this.charactersRead = 0;
     this.position = 0;
+    this.storeData = options && options.storeData === false ? false : true;
 
     this.on('prefinish', function() { this.flush(); });
   }
@@ -33,6 +35,11 @@ class JSONSplitter extends Duplex {
   _write(chunk, encoding, callback) {
     this.buffer += decode(chunk, encoding);
     this._search();
+    if (!this.storeData) {
+      this.charactersRead += this.buffer.length;
+      this.buffer = '';
+      this.position = 0;
+    }
     callback();
   }
 
@@ -91,7 +98,11 @@ class JSONSplitter extends Duplex {
 
         stack.pop();
         if (stack.length === 1) {
-          this.push(this.buffer.substring(0, this.position));
+          this.charactersRead += this.position;
+          this.emit('finishedJSON', { jsonEnd: this.charactersRead });
+          if (this.storeData) {
+            this.push(this.buffer.substring(0, this.position));
+          }
           this.buffer = this.buffer.substring(this.position);
           this.position = 0;
         }
@@ -107,7 +118,7 @@ class JSONSplitter extends Duplex {
   }
 
   flush() {
-    if (this.buffer.length > 0)
+    if (this.buffer.length > 0 && this.storeData)
       this.push(this.buffer);
     this.push(null);
   }

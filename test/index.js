@@ -45,4 +45,33 @@ describe('JSONSplitter', function() {
     s.end();
     assert.strictEqual(s.read(), 'foo');
   });
+
+  it('emits json chunk offsets', function() {
+    const s = new JSONSplitter();
+    let called = [];
+    s.on('finishedJSON', position => called.push(position.jsonEnd));
+    s.write('[');
+    assert.deepStrictEqual(called, []);
+    s.write(']');
+    assert.deepStrictEqual(called, [2]);
+    s.write(' {}{}');
+    assert.deepStrictEqual(called, [2, 5, 7]);
+    assert.deepStrictEqual(s.read(), '[]');
+    assert.deepStrictEqual(s.read(), ' {}');
+    assert.deepStrictEqual(s.read(), '{}');
+    assert.deepStrictEqual(s.read(), null);
+  });
+
+  it('emits json chunk offsets in non-storing mode', function() {
+    const s = new JSONSplitter({ storeData: false });
+    let called = [];
+    s.on('finishedJSON', position => called.push(position.jsonEnd));
+    s.write('[');
+    assert.deepStrictEqual(called, []);
+    s.write(']');
+    assert.deepStrictEqual(called, [2]);
+    s.write(' {}{}');
+    assert.deepStrictEqual(called, [2, 5, 7]);
+    assert.deepStrictEqual(s.read(), null);
+  });
 });

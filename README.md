@@ -23,6 +23,23 @@ chunker.read(); // => '{"a":12}'
 chunker.read(); // => null
 ```
 
+Also supports not storing the incoming data and just emitting events for
+JSON boundaries (counted in JS string length, not bytes):
+
+```
+const chunker = new JSONSplitStream({ storeData: false });
+chunker.on('finishedJSON', ({ jsonEnd }) => {
+  console.log('ended at', jsonEnd);
+});
+
+chunker.write('[1,2,3]{"a":');
+chunker.write('12}');
+
+// Prints:
+ended at 7
+ended at 15
+```
+
 License
 =======
 
