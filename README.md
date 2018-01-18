@@ -26,7 +26,7 @@ chunker.read(); // => null
 Also supports not storing the incoming data and just emitting events for
 JSON boundaries (counted in JS string length, not bytes):
 
-```
+```js
 const chunker = new JSONSplitStream({ storeData: false });
 chunker.on('finishedJSON', ({ jsonEnd }) => {
   console.log('ended at', jsonEnd);
