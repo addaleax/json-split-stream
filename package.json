@@ -1,6 +1,6 @@
 {
   "name": "json-split-stream",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A fast way to split concatenated JSON data into individual chunks",
   "engine": ">=4.0.0",
   "main": "index.js",
