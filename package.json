@@ -1,0 +1,36 @@
+{
+  "name": "json-split-stream",
+  "version": "1.0.0",
+  "description": "A fast way to split concatenated JSON data into individual chunks",
+  "engine": ">=4.0.0",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "readable-stream": "^2.3.3"
+  },
+  "devDependencies": {
+    "mocha": "^4.0.1",
+    "nyc": "^11.3.0"
+  },
+  "scripts": {
+    "test": "nyc mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/addaleax/json-split-stream.git"
+  },
+  "keywords": [
+    "duplex",
+    "pair",
+    "streams",
+    "socket"
+  ],
+  "author": "Anna Henningsen <anna@addaleax.net>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/addaleax/json-split-stream/issues"
+  },
+  "homepage": "https://github.com/addaleax/json-split-stream#readme"
+}
