@@ -39,7 +39,7 @@ describe('JSONSplitter', function() {
     const s = new JSONSplitter();
     s.write('[] {}""foo');
     assert.strictEqual(s.read(), '[]');
-    assert.strictEqual(s.read(), ' {}');
+    assert.strictEqual(s.read(), '{}');
     assert.strictEqual(s.read(), '""');
     assert.strictEqual(s.read(), null);
     s.end();
@@ -57,7 +57,7 @@ describe('JSONSplitter', function() {
     s.write(' {}{}');
     assert.deepStrictEqual(called, [2, 5, 7]);
     assert.deepStrictEqual(s.read(), '[]');
-    assert.deepStrictEqual(s.read(), ' {}');
+    assert.deepStrictEqual(s.read(), '{}');
     assert.deepStrictEqual(s.read(), '{}');
     assert.deepStrictEqual(s.read(), null);
   });
