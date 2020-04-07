@@ -3,18 +3,6 @@ const assert = require('assert');
 const stream = require('readable-stream');
 const Duplex = stream.Duplex;
 
-const passThrough = new stream.PassThrough({
-  encoding: 'utf8',
-  decodeStrings: false
-});
-
-function decode(chunk, encoding) {
-  if (typeof chunk === 'string')
-    return chunk;
-  passThrough.write(chunk, encoding);
-  return passThrough.read();
-}
-
 class JSONSplitter extends Duplex {
   constructor(options) {
     super(Object.assign({}, options, {
@@ -30,6 +18,18 @@ class JSONSplitter extends Duplex {
     this.skipped = 0;
     this.storeData = options && options.storeData === false ? false : true;
 
+    const passThrough = new stream.PassThrough({
+      encoding: 'utf8',
+      decodeStrings: false
+    });
+
+    this.decode = function(chunk, encoding) {
+      if (typeof chunk === 'string')
+        return chunk;
+      passThrough.write(chunk, encoding);
+      return passThrough.read();
+    };
+
     this.on('prefinish', function() { this.flush(); });
   }
 
@@ -40,7 +40,7 @@ class JSONSplitter extends Duplex {
   }
 
   _write(chunk, encoding, callback) {
-    this.buffer += decode(chunk, encoding);
+    this.buffer += this.decode(chunk, encoding);
     this._trimStart()
 
     this._search();
